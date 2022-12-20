@@ -15,14 +15,14 @@ from . import bitbucket, github, gitlab
 
 @click.group()
 def cli():
-    # No generic functionality needed at the time.
+    # No generic actions
     pass
 
 @cli.command("gitlab")
 @click.option("--command", type=shlex.split, default="spectral scan --include-tags base,audit,iac")
 def do_gitlab(command):
     click.secho("🔰 Starting GitLab scan", fg="green")
-    scanner = gitlab.Runner(os.environ["GITLAB_PAT"], command)
+    scanner = gitlab.Runner(os.environ["GITLAB_PAT"], command, os.environ["GITLAB_URL"])
     scanner.scan_all()
 
 @cli.command("bitbucket")
@@ -35,7 +35,7 @@ def do_bitbucket(command):
     scanner.scan_all()
 
 @cli.command("github")
-@click.argument("--command", type=shlex.split, default="spectral scan --include-tags base,audit,iac")
+@click.option("--command", type=shlex.split, default="spectral scan --include-tags base,audit,iac")
 def do_github(command):
     click.secho("🔰 Starting GitHub scan", fg="green")
     scanner = github.Runner(os.environ["GITHUB_PAT"], command)

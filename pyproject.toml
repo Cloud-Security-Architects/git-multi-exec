@@ -11,9 +11,9 @@ git-multi-exec = "git_multi_exec.cli:cli"
 python = "^3.10"
 atlassian-python-api = "^3.32.1"
 pygit2 = "^1.11.1"
-octokitpy = "^0.15.0"
 python-gitlab = "^3.12.0"
 python-dotenv = "^0.21.0"
+PyGithub = "^1.57"
 
 [tool.poetry.dev-dependencies]
 bandit = "^1.7.4"

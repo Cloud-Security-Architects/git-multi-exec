@@ -1,6 +1,6 @@
 import logging
 
-from octokit import Octokit
+from github import Github
 
 from .util import RemoteCallback, clone_and_run
 
@@ -8,16 +8,21 @@ log = logging.getLogger(__name__)
 
 
 class Runner:
-    def __init__(self, token, command):
+    def __init__(self, token, command, url=None):
         self.command = command
-        self.gh = Octokit(auth="token", token=token)
+        if url:
+            self.gh = Github(login_or_token=token, base_url=url)
+        else:
+            self.gh = Github(login_or_token=token)
         self.callback = RemoteCallback("x-access-token", token)
 
     def scan_all(self):
-        orgs = [org["login"] for org in self.gh.orgs.list_for_authenticated_user().json]
+        # Get the orgs for the currently authenticated user
+        orgs = self.gh.get_user().get_orgs()
         for org in orgs:
-            repos = self.gh.repos.list_organization_repositories(org=org).json
+            log.debug("Scanning org %s", org.login)
+            repos = org.get_repos('member')
             for repo in repos:
                 clone_and_run(
-                    repo["clone_url"], command=self.command, callback=self.callback
+                    repo.clone_url, command=self.command, callback=self.callback
                 )

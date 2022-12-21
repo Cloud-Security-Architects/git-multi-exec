@@ -39,5 +39,3 @@ Collects all groups and descends into subgroups and repositories.
 
 ## For BitBucket
 Collects all workspaces and descends into projects and repositories.
-
-

@@ -21,7 +21,7 @@ class Runner:
         orgs = self.gh.get_user().get_orgs()
         for org in orgs:
             log.debug("Scanning org %s", org.login)
-            repos = org.get_repos('member')
+            repos = org.get_repos("member")
             for repo in repos:
                 clone_and_run(
                     repo.clone_url, command=self.command, callback=self.callback

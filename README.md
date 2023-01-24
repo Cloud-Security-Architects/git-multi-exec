@@ -16,17 +16,45 @@ The repositories are collected recursively from the top, based on available perm
 # Usage
 1. Configure credentials for your Git SaaS platforms as environment variables.
 
-```env
-BITBUCKET_USER=
-BITBUCKET_PAT=
+    ```env
+    BITBUCKET_USER=
+    BITBUCKET_PAT=
 
-GITLAB_PAT=
+    GITLAB_PAT=
 
-GITHUB_PAT=
-```
+    GITHUB_PAT=
+    ```
 
-2. Run `git-multi-exec`
+2. Run `git-multi-exec <platform>` with platform being one of `github`, `gitlab` or `bitbucket`.
 
+    By default it will run `spectral scan --include-tags base,audit,iac`
+
+
+# Required permissions
+
+## Audit
+### GitHub
+#### Classic
+- repo
+- read:org
+- read:user
+#### Fine-grained (beta)
+TODO
+
+### GitLab
+- read_api
+- read_user
+- read_repository
+
+### BitBucket
+- Account
+    - Read
+- Workspace membership
+    - Read
+- Projects
+    - Read
+- Repositories
+    - Read
 
 # Structure
 How `git-multi-exec` handles each platform under `scan_all`:
@@ -35,7 +63,8 @@ How `git-multi-exec` handles each platform under `scan_all`:
 Collects all organizations and descends into their repositories.
 
 ## For GitLab
-Collects all groups and descends into subgroups and repositories.
+Collects all groups and descends into repositories.
+Subgroups are listed by the API as part of all groups.
 
 ## For BitBucket
 Collects all workspaces and descends into projects and repositories.

@@ -57,7 +57,7 @@ TODO
     - Read
 
 # Structure
-How `git-multi-exec` handles each platform under `scan_all`:
+How `git-multi-exec` handles each platform
 
 ## For GitHub
 Collects all organizations and descends into their repositories.

@@ -30,7 +30,7 @@ class Runner:
             self.scan_workspace(workspace)
 
 
-class DatacenterRunner(Runner):
+class DatacenterRunner:
     def __init__(self, auth, command, url):
         self.command = command
         username, password = auth

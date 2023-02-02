@@ -8,7 +8,7 @@ log = logging.getLogger(__name__)
 
 
 class Runner:
-    def __init__(self, auth, command):
+    def __init__(self, auth, command, url=None):
         self.command = command
         username, password = auth
         self.bitbucket = atlassian.bitbucket.Cloud(
@@ -28,6 +28,24 @@ class Runner:
     def scan_all(self):
         for workspace in self.bitbucket.workspaces.each():
             self.scan_workspace(workspace)
+
+
+class DatacenterRunner(Runner):
+    def __init__(self, auth, command, url):
+        self.command = command
+        username, password = auth
+        self.bitbucket = atlassian.bitbucket.Bitbucket(
+            url=url, username=username, password=password
+        )
+        self.callback = RemoteCallback(username, password)
+
+    def scan_all(self):
+        for project in self.bitbucket.project_list():
+            for repo in self.bitbucket.repo_list(project["key"]):
+                clone_link = [
+                    x["href"] for x in repo["links"]["clone"] if x["name"] == "http"
+                ][0]
+                clone_and_run(clone_link, command=self.command, callback=self.callback)
 
 
 # The package doesn't have a simple way to get the clone link otherwise.

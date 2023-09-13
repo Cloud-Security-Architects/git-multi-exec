@@ -10,7 +10,7 @@ log = logging.getLogger(__name__)
 
 load_dotenv()
 
-from . import bitbucket, github, gitlab
+from . import bitbucket, github, gitlab, azure_devops
 
 
 @click.group()
@@ -58,4 +58,17 @@ def do_bitbucket(command, url):
 def do_github(command):
     click.secho("🔰 Starting GitHub scan", fg="green")
     scanner = github.Runner(os.environ["GITHUB_PAT"], command)
-    scanner.scan_all()
+
+@cli.command("azure-devops")
+@click.option(
+    "--command", type=shlex.split, default="spectral scan --include-tags base,audit,iac"
+)
+@click.option("--org")
+def do_azure_devops(command, org):
+    click.secho("🔰 Starting Azure DevOps scan", fg="green")
+
+    if org:
+        scanner = azure_devops.Runner(os.environ["AZURE_DEVOPS_PAT"], command, org=org)
+        scanner.scan_all()
+    else:
+        click.secho("org is required for ADO")

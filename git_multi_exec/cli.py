@@ -55,9 +55,16 @@ def do_bitbucket(command, url):
 @click.option(
     "--command", type=shlex.split, default="spectral scan --include-tags base,audit,iac"
 )
-def do_github(command):
+@click.option("--org")
+def do_github(command, org):
     click.secho("🔰 Starting GitHub scan", fg="green")
+
     scanner = github.Runner(os.environ["GITHUB_PAT"], command)
+    if org:
+        scanner.scan_org(org)
+    else:
+        scanner.scan_all()
+
 
 @cli.command("azure-devops")
 @click.option(

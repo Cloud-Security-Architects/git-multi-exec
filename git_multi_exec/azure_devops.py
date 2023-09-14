@@ -26,6 +26,5 @@ class Runner:
         for project in get_projects_response:
             print(f"Collecting repos for {project.name}")
             repos = git_client.get_repositories(project.id)
-            print(repos)
             for repo in repos:
                 clone_and_run(repo.remote_url, self.command, self.callback)

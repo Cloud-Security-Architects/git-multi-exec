@@ -77,3 +77,6 @@ Subgroups are listed by the API as part of all groups.
 
 ## For BitBucket
 Collects all workspaces and descends into projects and repositories.
+
+## For Azure DevOps
+Collects all projects under an organization and iterates over their repositories.

@@ -75,7 +75,10 @@ def do_azure_devops(command, org):
     click.secho("🔰 Starting Azure DevOps scan", fg="green")
 
     if org:
-        scanner = azure_devops.Runner(os.environ["AZURE_DEVOPS_PAT"], command, org=org)
-        scanner.scan_all()
+        scanner = azure_devops.OrgRunner(
+            os.environ["AZURE_DEVOPS_PAT"], command, org=org
+        )
+        scanner.scan_org()
     else:
-        click.secho("org is required for ADO")
+        scanner = azure_devops.Runner(os.environ["AZURE_DEVOPS_PAT"], command)
+        scanner.scan_all()

@@ -30,7 +30,7 @@ The repositories are collected recursively from the top, based on available perm
 2. Run `git-multi-exec <platform>` with platform being one of `github`, `gitlab`, `bitbucket` or `azure-devops`.
    By default it will run `spectral scan --include-tags base,audit,iac`.
 
-   Azure DevOps requires to specify the organization with `--org <organization_name>`.
+   Azure DevOps supports specifying an organization with `--org <organization_name>`.
 
 
 # Required permissions
@@ -60,10 +60,18 @@ TODO
     - Read
 
 ### Azure DevOps
+#### Single org
 - Code
     - Read
 - Project / Team
     - Read
+#### All orgs
+- Identity
+ - Read
+- Code
+  - Read
+- Project / Team
+  - Read
 
 # Structure
 How `git-multi-exec` handles each platform

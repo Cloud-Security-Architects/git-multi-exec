@@ -78,7 +78,7 @@ def do_azure_devops(command, org):
         scanner = azure_devops.OrgRunner(
             os.environ["AZURE_DEVOPS_PAT"], command, org=org
         )
-        scanner.scan_org()
+        scanner.scan_all()
     else:
         scanner = azure_devops.Runner(os.environ["AZURE_DEVOPS_PAT"], command)
         scanner.scan_all()

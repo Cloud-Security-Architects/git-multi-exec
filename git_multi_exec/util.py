@@ -1,4 +1,5 @@
 import subprocess
+import sys
 import tempfile
 import logging
 
@@ -19,13 +20,16 @@ class RemoteCallback(pygit2.RemoteCallbacks):
 
 
 def clone_and_run(clone_link: str, command, callback=None) -> None:
-    with tempfile.TemporaryDirectory() as tempdir:
-        click.secho(f"💫 Cloning '{clone_link}' into: {tempdir}", fg="blue")
-        pygit2.clone_repository(clone_link, tempdir, callbacks=callback)
-        click.secho("💻 Executing command...", fg="blue")
-        spectral = subprocess.Popen(
-            command, cwd=tempdir, stdout=subprocess.PIPE, stderr=subprocess.PIPE
-        )
-        out, err = spectral.communicate()
-        print(out.decode())
-        print(err.decode())
+    try:
+        with tempfile.TemporaryDirectory() as tempdir:
+            click.secho(f"💫 Cloning '{clone_link}' into: {tempdir}", fg="blue")
+            pygit2.clone_repository(clone_link, tempdir, callbacks=callback)
+            click.secho("💻 Executing command...", fg="blue")
+            spectral = subprocess.Popen(
+                command, cwd=tempdir, stdout=subprocess.PIPE, stderr=subprocess.PIPE
+            )
+            out, err = spectral.communicate()
+            print(out.decode())
+            print(err.decode())
+    except Exception as e:
+        click.secho(f"Exception during clone / run: {e} ", file=sys.stderr)

@@ -71,14 +71,18 @@ def do_github(command, org):
     "--command", type=shlex.split, default="spectral scan --include-tags base,audit,iac"
 )
 @click.option("--org")
-def do_azure_devops(command, org):
+@click.option("--ignore-accounts", metavar="<account_name,...>")
+def do_azure_devops(command, org, ignore_accounts):
+
     click.secho("🔰 Starting Azure DevOps scan", fg="green")
 
     if org:
         scanner = azure_devops.OrgRunner(
-            os.environ["AZURE_DEVOPS_PAT"], command, org=org
+            os.environ["AZURE_DEVOPS_PAT"], command, org=org, ignore_accounts=ignore_accounts
         )
         scanner.scan_all()
     else:
-        scanner = azure_devops.Runner(os.environ["AZURE_DEVOPS_PAT"], command)
+        if ignore_accounts:
+            ignore_accounts = ignore_accounts.split(',')
+        scanner = azure_devops.Runner(os.environ["AZURE_DEVOPS_PAT"], command, ignore_accounts)
         scanner.scan_all()

@@ -12,12 +12,16 @@ log = logging.getLogger(__name__)
 
 
 class Runner:
-    def __init__(self, token, command):
+    def __init__(self, token, command, ignore_accounts=None):
         self.command = command
         self.token = token
         self.credentials = BasicAuthentication("", token)
         self.url = "https://app.vssps.visualstudio.com/"
         self.connection = Connection(base_url=self.url, creds=self.credentials)
+        if ignore_accounts is None:
+            self.ignore_accounts = []
+        else:
+            self.ignore_accounts = ignore_accounts
 
     def scan_all(self):
         accounts_client = self.connection.clients.get_accounts_client()
@@ -29,6 +33,9 @@ class Runner:
         )
 
         for account in accounts:
+            if account.account_name in self.ignore_accounts: 
+                click.secho(f"Ignoring {account.account_name}")
+                continue
             click.secho(f"Processing {account.account_name}...")
             account_runner = OrgRunner(
                 token=self.token, command=self.command, org=account.account_name
